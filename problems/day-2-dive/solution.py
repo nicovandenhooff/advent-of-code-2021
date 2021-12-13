@@ -18,11 +18,13 @@ def part_1(data):
     directions = [d[:-2] for d in data]
 
     depths = np.array(
-        [-1 if y == "up" else "1" if y == "down" else 0 for y in directions], dtype=int
+        [-1 if y == "up" else "1" if y == "down" else 0 for y in directions],
+        dtype=int
     )
 
     horizontals = np.array(
-        [1 if x == "forward" else 0 for x in directions], dtype=int
+        [1 if x == "forward" else 0 for x in directions],
+        dtype=int
     )
 
     final_depth = np.sum(movement * depths)

@@ -1,4 +1,4 @@
-# Day 1: Sonar Sweep
+# Day 2: Dive!
 
 - [Advent of Code](https://adventofcode.com/2021/day/2)
 - [Problem Description](https://github.com/nicovandenhooff/advent-of-code-2021/blob/main/problems/day-2-dive/info.txt)
