@@ -39,34 +39,47 @@ def read_data(path):
             else:
                 matrix.append(row)
 
+        # append the last board
+        bingo_boards.append(np.array(matrix, dtype=int))
+
     # theres a space in the input file that needs to be removed here...
     bingo_boards.pop(0)
 
     return numbers, bingo_boards
 
 
+def mark_board(board, number):
+    """Marks a bingo board for a number that was called"""
+    return np.where(board == number, -1, board)
+
+
 def check_win(board, index):
+    """Checks a bingo board to see if it is a winner"""
     row_winner = np.all(board[index, :] == -1)
     column_winner = np.all(board[:, index] == -1)
 
     return row_winner or column_winner
 
 
+def get_score(board, number):
+    """Gets the final score for a bingo board"""
+    return np.sum(np.where(board == -1, 0, board)) * number
+
+
 def part_1(numbers, bingo_boards):
+
+    count = 0
     win = False
 
     while not win:
-        # draw number
-        current_num = numbers.pop(0)
+        # draw the next number
+        current_num = numbers[count]
 
         for i in range(len(bingo_boards)):
-            # mark current number in each board as -1
-            bingo_boards[i] = np.where(
-                bingo_boards[i] == current_num, -1, bingo_boards[i]
-            )
+            # mark the boards
+            bingo_boards[i] = mark_board(bingo_boards[i], current_num)
 
             for j in range(len(bingo_boards[i])):
-                # check for a winner
                 if check_win(bingo_boards[i], j):
                     win = True
                     winner = bingo_boards[i]
@@ -75,24 +88,53 @@ def part_1(numbers, bingo_boards):
             if win:
                 break
 
-    # score is sum of unmarked numbers
-    score = np.sum(np.where(winner == -1, 0, winner))
-    solution1 = current_num * score
+        count += 1
+
+    solution1 = get_score(winner, current_num)
 
     return solution1
 
 
-def part_2(data):
-    pass
+def part_2(numbers, bingo_boards):
+
+    count = 0
+    winners = np.zeros(len(bingo_boards))
+
+    while sum(winners) < len(bingo_boards):
+        # draw the next number
+        current_num = numbers[count]
+
+        for i in range(len(bingo_boards)):
+            # mark the boards
+            bingo_boards[i] = mark_board(bingo_boards[i], current_num)
+
+            for j in range(len(bingo_boards[i])):
+                if check_win(bingo_boards[i], j):
+                    # keep track of boards as they win
+                    if winners[i] == 0:
+                        winners[i] = 1
+                    else:
+                        continue
+
+                # get the last winner board index
+                if sum(winners) == len(bingo_boards) - 1:
+                    last_winner_idx = int(np.where(winners == 0)[0])
+
+        count += 1
+
+    last_winner = bingo_boards[last_winner_idx]
+    solution2 = get_score(last_winner, current_num)
+
+    return solution2
 
 
 def main(path):
     numbers, bingo_boards = read_data(path)
     solution1 = part_1(numbers, bingo_boards)
-    # solution2 = part_2(data)
+    solution2 = part_2(numbers, bingo_boards)
 
     print(f"Part 1 Solution: {solution1}")
-    # print(f"Part 2 Solution: {solution2}")
+    print(f"Part 2 Solution: {solution2}")
 
 
 if __name__ == "__main__":
