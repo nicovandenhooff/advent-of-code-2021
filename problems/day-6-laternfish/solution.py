@@ -19,7 +19,7 @@ def part_1(laternfish, days=80):
     total_new_fish = 0
 
     while days > 0:
-        # add new fish from previous day
+        # create new fish from previous day
         new_fish = np.full(total_new_fish, 8)
 
         # reset fish that just spawned a new fish
