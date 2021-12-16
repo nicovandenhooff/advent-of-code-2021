@@ -3,6 +3,7 @@
 # Author: Nico Van den Hooff
 
 import numpy as np
+from collections import Counter
 
 
 def read_data(path):
@@ -14,43 +15,54 @@ def read_data(path):
     return laternfish
 
 
+def latern_fish_growth(laternfish, days, timer=8):
+    """Models latern fish growth and returns number of fish after n days"""
+    tracker = Counter()
+
+    for i in range(timer + 1):
+        tracker[i] = 0
+
+    # starting values of each latern fish
+    for i in laternfish:
+        tracker[i] += 1
+
+    for day in range(days):
+
+        # new fish to be born
+        new_fish = tracker[0]
+
+        # shift fish one day up as day passes
+        for i in range(timer + 1):
+            tracker[i] = tracker[i + 1]
+
+        # reset fish that spawned a new fish and add spawned fish
+        tracker[timer - 2] += new_fish
+        tracker[timer] += new_fish
+
+    total_latern_fish = sum(tracker.values())
+
+    return total_latern_fish
+
+
 def part_1(laternfish, days=80):
-
-    total_new_fish = 0
-
-    while days > 0:
-        # create new fish from previous day
-        new_fish = np.full(total_new_fish, 8)
-
-        # reset fish that just spawned a new fish
-        laternfish = np.where(laternfish == 0, 7, laternfish)
-
-        # day goes by
-        days -= 1
-        laternfish -= 1
-
-        # add new fish
-        laternfish = np.append(laternfish, new_fish)
-
-        # calcualte new fish for next day
-        total_new_fish = laternfish.shape[0] - np.count_nonzero(laternfish)
-
-    solution1 = len(laternfish)
+    solution1 = latern_fish_growth(laternfish, days)
 
     return solution1
 
 
-def part_2(data):
-    pass
+def part_2(laternfish, days=256):
+    solution2 = latern_fish_growth(laternfish, days)
+
+    return solution2
 
 
 def main(path):
     data = read_data(path)
     solution1 = part_1(data)
-    # solution2 = part_2(data)
+    solution2 = part_2(data)
 
     print(f"Part 1 Solution: {solution1}")
-    # print(f"Part 2 Solution: {solution2}")
+    print(f"Part 2 Solution: {solution2}")
 
 
 if __name__ == "__main__":
