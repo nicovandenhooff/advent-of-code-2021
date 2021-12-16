@@ -2,7 +2,6 @@
 # Day 6: Part 1 and Part 2
 # Author: Nico Van den Hooff
 
-import numpy as np
 from collections import Counter
 
 
@@ -10,7 +9,8 @@ def read_data(path):
     with open(path, "r") as f:
         data = f.read()
 
-    laternfish = np.array(data.split(","), dtype=int)
+    laternfish = data.split(",")
+    laternfish = [int(i) for i in laternfish]
 
     return laternfish
 
