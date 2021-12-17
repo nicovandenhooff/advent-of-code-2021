@@ -39,7 +39,6 @@ def part_2(inputs, outputs):
 
 
 def main(path):
-    pass
     inputs, outputs = read_data(path)
     solution1 = part_1(outputs)
     # solution2 = part_2(data)
